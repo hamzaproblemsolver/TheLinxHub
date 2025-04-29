@@ -62,15 +62,12 @@ class WebSocketSingleton {
         this.socket?.emit('leave', conversationId);
     }
 
-    sendMessage({ conversationId, message }) {
+    sendMessage({ conversationId, message, receiverId }) {
         console.log("📤 Sending message:", message);
         console.log("Sending message:", conversationId);
-        this.socket?.emit("send-message", { conversation: conversationId, message: message });
+        this.socket?.emit("send-message", { conversation: conversationId, message: message, receiverId });
     }
 
-    listenForMessages(callback) {
-        this.socket?.on("receive-message", callback);
-    }
 
     listenForOnlineUsers(callback) {
         this.socket?.on("update-online-users", callback);

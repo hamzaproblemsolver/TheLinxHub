@@ -54,7 +54,6 @@ export const getConversations = async (req, res) => {
         participants: formattedParticipants,
       }
     })
-
     return successResponse(res, 200, {
       conversations: conversationsWithUnreadCount,
       page,

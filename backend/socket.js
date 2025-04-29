@@ -34,6 +34,7 @@ const handleSocketEvents = (io) => {
 
     // Store user with their socket id
     users.set(socket.user.id, socket.id);
+    console.log(users,'users are here')
 
     // Join conversation room
     socket.on('join', (conversationId) => {
@@ -49,7 +50,9 @@ const handleSocketEvents = (io) => {
 
     // Send a message to a conversation
     socket.on('send-message', (message) => {
-      console.log(message, "Message sent from client to server");
+      console.log({message}, "Message sent from client to server");
+      const receiverSocketId = users.get(message.receiverId)
+      socket.to(receiverSocketId).emit("receive-message", message.message)
       socket.to(message.conversationId).emit('new_message', message.message); // EMIT matching frontend
     });
     

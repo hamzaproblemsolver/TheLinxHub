@@ -64,7 +64,7 @@ const MessageTest = ({
       const data = await response.json()
       
       // Navigate to the conversation
-      navigate(`/client/messaging`)
+      navigate(`/client/messages`)
       
     } catch (error) {
       console.error("Error starting conversation:", error)

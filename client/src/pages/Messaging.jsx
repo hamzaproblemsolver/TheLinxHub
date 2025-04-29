@@ -118,7 +118,7 @@ const Messaging = () => {
       })
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}`)``
       }
 
       const data = await response.json()
@@ -351,7 +351,8 @@ const Messaging = () => {
 
       const data = await response.json()
       console.log("Message sent successfully:", data)
-       webSocketSingleton.sendMessage({conversationId: selectedConversation._id, message: data.message.message})
+      console.log("receiver id",selectedConversation.participants[1]._id)
+       webSocketSingleton.sendMessage({conversationId: selectedConversation._id, message: data.message.message, receiverId: selectedConversation.participants[1]._id})
       // Replace temp message with real message
            // Update conversation with new message
 
@@ -552,6 +553,7 @@ const Messaging = () => {
       }
 
       // Remove conversation from UI
+      console.log("conversaton",)
       setConversations((prev) => prev.filter((conv) => conv._id !== conversationId))
       setFilteredConversations((prev) => prev.filter((conv) => conv._id !== conversationId))
 
@@ -699,6 +701,8 @@ const formatMessageTime = (dateString) => {
         return null
     }
   }
+
+  console.log({messages})
 
   // Get other participant in conversation
   const getOtherParticipant = (conversation) => {
@@ -1000,7 +1004,7 @@ const formatMessageTime = (dateString) => {
                         new Date(message.createdAt).toDateString() !==
                           new Date(messages[index - 1].createdAt).toDateString()
 
-                      const isUserMessage = message.sender?._id?.toString() === user._id?.toString()
+                      const isUserMessage = message.sender?._id === user._id
 
                       return (
                         <div key={message._id || `temp-${index}`}>
