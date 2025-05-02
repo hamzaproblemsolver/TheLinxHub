@@ -3,8 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   conversations: [],
   selectedConversation: null,
-  messages: {},
-  newMessages: {},
+  messages: [],
+  newMessages: [],
 };
 
 const messagingSlice = createSlice({
@@ -18,15 +18,10 @@ const messagingSlice = createSlice({
       state.selectedConversation = action.payload;
     },
     setMessages: (state, action) => {
-      const { conversationId, messages } = action.payload;
-      state.messages[conversationId] = messages;
+      state.messages = action.payload;
     },
     addMessage: (state, action) => {
-      const { conversationId, message } = action.payload;
-      if (!state.messages[conversationId]) {
-        state.messages[conversationId] = [];
-      }
-      state.messages[conversationId].push(message);
+      state.messages = [ ...(state.messages || []),action.payload,];
     },
     addNewMessage: (state, action) => {
       const { conversationId, message } = action.payload;

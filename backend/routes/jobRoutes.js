@@ -22,7 +22,9 @@ import {
   saveJob,
   unsaveJob,
   searchJobs,
-  getClientCrowdsourcedJobs
+  getClientCrowdsourcedJobs,
+  getFreelancerCrowdsourcedJobs,
+  
 } 
 from '../controllers/jobController.js';
 import { protect, authorize, isVerified } from '../middleware/auth.js';
@@ -35,8 +37,9 @@ const router = express.Router();
 router.get('/', protect, getJobs);
 router.get('/all-jobs', protect, getAllJobs);
 router.get('/search',protect,isFreelancer, searchJobs);
-router.get('/teams', protect,isClient, getClientCrowdsourcedJobs);
- router.get('/:id', getJobById);
+router.get('/client/teams', protect, getClientCrowdsourcedJobs);
+router.get('/freelancer/teams', protect, getFreelancerCrowdsourcedJobs);
+router.get('/:id', getJobById);
 
 
 // Protected routes

@@ -385,7 +385,7 @@ const OfferCard = ({ offer, isTeam, onRespond, isResponding, formatDate }) => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={() => onRespond(offer.job._id, offer._id, false)}
+            onClick={() => onRespond(offer.jobId, offer._id, false)}
             disabled={isResponding}
             className="flex-1 bg-[#2D3748] hover:bg-[#4A5568] text-white px-4 py-3 rounded-md flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >

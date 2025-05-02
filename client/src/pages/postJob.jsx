@@ -22,6 +22,7 @@ import SkillsRequirements from "../components/job-form/skills-requirements"
 import BudgetTimeline from "../components/job-form/budget-timeline"
 import AttachmentsVisibility from "../components/job-form/attachments-visibility"
 import JobPreview from "../components/job-form/job-preview"
+import { uploadFile } from "../services/fileUpload"
 
 const PostJob = () => {
   const navigate = useNavigate()
@@ -141,9 +142,12 @@ const PostJob = () => {
 
       // Add attachments
       if (jobData.attachments && jobData.attachments.length > 0) {
-        jobData.attachments.forEach((file, index) => {
-          formDataToSend.append(`attachment_${index}`, file)
-        })
+        const uploadPromises = jobData.attachments.map(file => uploadFile(file));
+        const uploadedUrls = await Promise.all(uploadPromises);
+        
+        uploadedUrls.forEach((url, index) => {
+          formDataToSend.append(`attachments[${index}]`, url);
+        });
       }
 
       // Send data to API
@@ -181,7 +185,7 @@ const PostJob = () => {
     { id: 1, name: "Basic Details", icon: FileText },
     { id: 2, name: "Skills & Requirements", icon: Users },
     { id: 3, name: "Budget & Timeline", icon: DollarSign },
-    { id: 4, name: "Attachments & Visibility", icon: Paperclip },
+    { id: 4, name: "Attachments", icon: Paperclip },
     { id: 5, name: "Preview & Post", icon: CheckCircle },
   ]
 

@@ -50,9 +50,9 @@ const Messaging = () => {
   const user = useSelector((state) => state.Auth.user)
 
   const [isLoading, setIsLoading] = useState(true)
-  const [conversations, setConversations] = useState([])
+  // const [conversations, setConversations] = useState([])
   const [filteredConversations, setFilteredConversations] = useState([])
-  const [selectedConversation, setSelectedConversation] = useState(null)
+  // const [selectedConversation, setSelectedConversation] = useState(null)
   // const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState("")
   const [searchQuery, setSearchQuery] = useState("")
@@ -67,15 +67,21 @@ const Messaging = () => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true)
   const [isSending, setIsSending] = useState(false)
   const [error, setError] = useState(null)
-  const messages = useSelector((state) => state.messaging.messages[selectedConversation?._id] || []);
+  const selectedConversation=useSelector((state) => state.messaging.selectedConversation)
+  const messages = useSelector((state) => state.messaging.messages || []);
 
+
+
+  const conversations=useSelector((state) => state.messaging.conversations)
+
+  // console.log(messages,'ae ne message')
   const messagesEndRef = useRef(null)
   const fileInputRef = useRef(null)
   const messageInputRef = useRef(null)
   const messagesContainerRef = useRef(null)
   const token = localStorage.getItem("authToken")
   //messages chats redux store 
-
+  
   // Check if user is authenticated
   useEffect(() => {
     if (!user) {
@@ -122,13 +128,14 @@ const Messaging = () => {
       }
 
       const data = await response.json()
-      console.log("Conversations API response:", data.message.conversations) // Debug log
+      // console.log("Conversations API response:", data.message.conversations) // Debug log
 
       if (!data || !data.data || !Array.isArray(data.message.conversations)) {
         throw new Error("Invalid response structure")
       }
 
-      setConversations(data.message.conversations)
+      // setConversations(data.message.conversations)
+      dispatch(setConversations(data.message.conversations))
       setFilteredConversations(data.message.conversations)
 
       // If no conversation is selected and we have conversations, select the first one
@@ -162,31 +169,10 @@ const Messaging = () => {
       // Find the conversation in our list or fetch it if not found
       const conversation = conversations.find((c) => c._id === id)
 
-      // if (!conversation) {
-      //   // Fetch the conversation details
-      //   const convResponse = await fetch(`http://localhost:5000/api/messages/conversations`, {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: `Bearer ${token}`
-      //     },
-      //     body: JSON.stringify({ conversationId: id })
-      //   })
-
-      //   if (!convResponse.ok) {
-      //     throw new Error("Failed to fetch conversation details")
-      //   }
-
-      //   const convData = await convResponse.json()
-      //   conversation = convData.data.conversation
-
-      //   // Add to conversations list
-      //   setConversations(prev => [conversation, ...prev])
-      //   setFilteredConversations(prev => [conversation, ...prev])
-      // }
-
-      setSelectedConversation(conversation)
-      setMessages(data.message.messages)
+      
+      // setSelectedConversation(conversation)
+      dispatch(setSelectedConversation(conversation))
+      dispatch(setMessages(data.message.messages))
       scrollToBottom()
 
       // Join the conversation room
@@ -197,6 +183,9 @@ const Messaging = () => {
     }
   }
 
+  useEffect(() => {
+    console.log(conversations,'these are convos')
+  },[conversations])
   // Fetch messages for a conversation
   const fetchMessages = async (conversationId, page = 1) => {
     try {
@@ -213,14 +202,14 @@ const Messaging = () => {
       console.log("Messages API response:", data) // Debug log
 
       if (page === 1) {
-        dispatch(setMessages({ conversationId, messages: data.message.messages }));
+        dispatch(setMessages(data.message.messages ));
         scrollToBottom()
       } else {
         // Prepend older messages
-        dispatch(setMessages({ 
-          conversationId, 
-          messages: [...data.message.messages, ...messages] 
-        }));
+        dispatch(setMessages(
+        
+           [...data.message.messages, ...messages] 
+        ));
       }
 
       // Check if there are more messages to load
@@ -242,7 +231,8 @@ const Messaging = () => {
 
   // Handle selecting a conversation
   const handleSelectConversation = (conversation) => {
-    setSelectedConversation(conversation)
+    // setSelectedConversation(conversation)
+    dispatch(setSelectedConversation(conversation))
     setPage(1)
     setHasMoreMessages(true)
     fetchMessages(conversation._id, 1)
@@ -255,7 +245,8 @@ const Messaging = () => {
     // Reset unread count for this conversation
     if (conversation.unreadCount > 0) {
       // Update locally
-      setConversations((prev) => prev.map((c) => (c._id === conversation._id ? { ...c, unreadCount: 0 } : c)))
+      // setConversations((prev) => prev.map((c) => (c._id === conversation._id ? { ...c, unreadCount: 0 } : c)))
+      dispatch(setConversations((prev) => prev.map((c) => (c._id === conversation._id ? { ...c, unreadCount: 0 } : c))))
       setFilteredConversations((prev) => prev.map((c) => (c._id === conversation._id ? { ...c, unreadCount: 0 } : c)))
     }
 
@@ -287,7 +278,8 @@ const Messaging = () => {
       const data = await response.json()
 
       // Add to conversations list and select it
-      setConversations((prev) => [data.data.conversation, ...prev])
+      // setConversations((prev) => [data.data.conversation, ...prev])
+      dispatch(setConversations((prev) => [data.data.conversation, ...prev]))
       setFilteredConversations((prev) => [data.data.conversation, ...prev])
       handleSelectConversation(data.data.conversation)
 
@@ -329,7 +321,7 @@ const Messaging = () => {
 
       console.log("Temp message:", tempMessage) // Debug log
 
-      dispatch(addMessage({ conversationId: selectedConversation._id, message: tempMessage }));
+      dispatch(addMessage(tempMessage ));
       scrollToBottom()
       setNewMessage("")
 
@@ -458,7 +450,7 @@ const Messaging = () => {
 
   // Update conversation list with new message
   const updateConversationWithNewMessage = (conversationId, message) => {
-    setConversations((prev) => {
+   dispatch( setConversations((prev) => {
       const updated = prev.map((conv) => {
         if (conv._id === conversationId) {
           // Increment unread count if message is from other user and conversation is not selected
@@ -482,7 +474,7 @@ const Messaging = () => {
         return new Date(b.updatedAt) - new Date(a.updatedAt)
       })
     })
-
+  )
     // Also update filtered conversations
     setFilteredConversations((prev) => {
       const updated = prev.map((conv) => {
@@ -554,12 +546,14 @@ const Messaging = () => {
 
       // Remove conversation from UI
       console.log("conversaton",)
-      setConversations((prev) => prev.filter((conv) => conv._id !== conversationId))
+      // setConversations((prev) => prev.filter((conv) => conv._id !== conversationId))
+      dispatch(setConversations((prev) => prev.filter((conv) => conv._id !== conversationId)))
       setFilteredConversations((prev) => prev.filter((conv) => conv._id !== conversationId))
 
       // If the deleted conversation was selected, clear selection
       if (selectedConversation && selectedConversation._id === conversationId) {
-        setSelectedConversation(null)
+        // setSelectedConversation(null)
+        dispatch(setSelectedConversation(null))
         setMessages([])
         navigate("/client/messages", { replace: true })
       }
@@ -615,14 +609,15 @@ const Messaging = () => {
     // In a real app, you would make an API call to update the star status
     // For now, we'll just update the UI
 
-    setConversations((prev) => prev.map((c) => (c._id === conversation._id ? { ...c, isStarred: !c.isStarred } : c)))
+    // setConversations((prev) => prev.map((c) => (c._id === conversation._id ? { ...c, isStarred: !c.isStarred } : c)))
+    dispatch(setConversations((prev) => prev.map((c) => (c._id === conversation._id ? { ...c, isStarred: !c.isStarred } : c))))
 
     setFilteredConversations((prev) =>
       prev.map((c) => (c._id === conversation._id ? { ...c, isStarred: !c.isStarred } : c)),
     )
 
     if (selectedConversation && selectedConversation._id === conversation._id) {
-      setSelectedConversation({ ...selectedConversation, isStarred: !selectedConversation.isStarred })
+     dispatch(setSelectedConversation({ ...selectedConversation, isStarred: !selectedConversation.isStarred }))
     }
   }
 

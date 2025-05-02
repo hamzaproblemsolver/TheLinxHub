@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import {store} from "./redux/Store"
-import { addNewMessage } from './redux/slices/messagingSlice';
+import { addMessage, addNewMessage, setConversations } from './redux/slices/messagingSlice';
 import { setMessages } from './redux/slices/messagingSlice';
 
 
@@ -65,7 +65,7 @@ class WebSocketSingleton {
     sendMessage({ conversationId, message, receiverId }) {
         console.log("📤 Sending message:", message);
         console.log("Sending message:", conversationId);
-        this.socket?.emit("send-message", { conversation: conversationId, message: message, receiverId });
+        this.socket?.emit("send-message", { conversationId: conversationId, message: message, receiverId });
     }
 
 
@@ -109,6 +109,34 @@ class WebSocketSingleton {
     };
 
     handleReceivedMessage = (data) => {
+      
+        console.log("📩 Received message:", data);
+        if (data.conversation === store.getState().messaging.selectedConversation?._id) {
+            store.dispatch(setMessages(data));
+            store.dispatch(addMessage(data))
+          }
+      
+          console.log(store.getState().messaging.conversations, "conversations")
+          const upadtedConvo = store
+            .getState()
+            .messaging.conversations?.map(item => {
+              if (item._id === data.conversation._id) {
+                return {
+                  ...item,
+                  lastMessage: data,
+                  lastMessageTimestamp: data.conversation.lastMessageTimestamp,
+                };
+              }
+              return item;
+            })
+            .sort((a, b) =>
+      a._id === data.conversation
+                ? -1
+                : new Date(b.lastMessageTimestamp).getTime() -
+                  new Date(a.lastMessageTimestamp).getTime(),
+            );
+      
+          upadtedConvo && store.dispatch(setConversations(upadtedConvo));
         console.log("📥 Received message (separate handler):", data);
     };
 

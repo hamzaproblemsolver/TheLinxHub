@@ -63,7 +63,7 @@ const BudgetTimeline = ({ jobData, handleChange }) => {
             <input
               type="number"
               value={jobData.budget}
-              onChange={(e) => handleChange("budget", Number.parseFloat(e.target.value) || 0)}
+              onChange={(e) => handleChange("budget", Number.parseFloat(e.target.value) )}
               className="bg-[#1e1e2d] border border-[#2d2d3a] text-white rounded-md block w-full pl-10 pr-3 py-3 focus:outline-none focus:ring-2 focus:ring-[#9333EA] focus:border-transparent"
               placeholder="Enter your budget"
               min="5"
@@ -301,7 +301,7 @@ const BudgetTimeline = ({ jobData, handleChange }) => {
                         <input
                           type="number"
                           value={role.budget}
-                          onChange={(e) => handleRoleChange(index, "budget", Number.parseFloat(e.target.value) || 0)}
+                          onChange={(e) => handleRoleChange(index, "budget", Number.parseFloat(e.target.value))}
                           className="bg-[#1e1e2d] border border-[#2d2d3a] text-white rounded-md block w-full pl-10 pr-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#9333EA] focus:border-transparent"
                           placeholder="Budget for this role"
                           min="5"

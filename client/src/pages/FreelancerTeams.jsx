@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { useSelector } from "react-redux"
+import axios from "axios"
 import {
   Users,
   Calendar,
@@ -14,18 +15,32 @@ import {
   ExternalLink,
   MessageSquare,
   User,
+  X,
 } from "lucide-react"
 import Navbar from "../components/Navbar"
+import { uploadFile } from "../services/fileUpload" // Import the uploadFile function
+
 
 const MyTeams = () => {
   const navigate = useNavigate()
   const user = useSelector((state) => state.Auth.user)
   const [teams, setTeams] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedTeam, setSelectedTeam] = useState(null)
   const [expandedMilestones, setExpandedMilestones] = useState({})
+  const [isSubmitPopupOpen, setIsSubmitPopupOpen] = useState(false)
+  const [submittingMilestone, setSubmittingMilestone] = useState(null)
+  const [submissionMessage, setSubmissionMessage] = useState("")
+  const [submissionFiles, setSubmissionFiles] = useState([])
+  const [isUploading, setIsUploading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
+  const token = localStorage.getItem("authToken")
+
+  const handleFileChange = (e) => {
+    setSubmissionFiles([...e.target.files])
+  }
   useEffect(() => {
     if (!user) {
       navigate("/login", {
@@ -38,169 +53,104 @@ const MyTeams = () => {
     }
   }, [user, navigate])
 
+
   const fetchTeams = async () => {
-    setIsLoading(true)
-    setError(null)
-
     try {
-      // This would be the actual API call in a real application
-      // For now, we'll use dummy data
-      const dummyTeams = [
-        {
-          _id: "team1",
-          job: {
-            _id: "job1",
-            title: "E-commerce Website Redesign",
-            description: "Complete redesign of an e-commerce platform with modern UI/UX",
-            client: {
-              _id: "client1",
-              name: "Tech Solutions Inc.",
-              profilePic:
-                "https://res.cloudinary.com/dxmeatsae/image/upload/v1745772539/client_verification_docs/mhpbkpi3vnkejxe0kpai.png",
-            },
-            budget: 150000,
-            deadline: "2025-06-30T00:00:00.000Z",
-            createdAt: "2025-04-15T00:00:00.000Z",
-          },
-          role: {
-            title: "Frontend Developer",
-            description: "Implement responsive UI components using React",
-            budget: 50000,
-          },
-          milestones: [
-            {
-              _id: "milestone1",
-              title: "Homepage Redesign",
-              description: "Create a modern, responsive homepage with hero section",
-              amount: 15000,
-              deadline: "2025-05-15T00:00:00.000Z",
-              status: "active",
-              attachments: [],
-            },
-            {
-              _id: "milestone2",
-              title: "Product Listing Pages",
-              description: "Implement product grid and filtering functionality",
-              amount: 20000,
-              deadline: "2025-06-01T00:00:00.000Z",
-              status: "pending",
-              attachments: [],
-            },
-            {
-              _id: "milestone3",
-              title: "Checkout Process",
-              description: "Create multi-step checkout process with validation",
-              amount: 15000,
-              deadline: "2025-06-15T00:00:00.000Z",
-              status: "pending",
-              attachments: [],
-            },
-          ],
-          teammates: [
-            {
-              _id: "user1",
-              name: "Sarah Johnson",
-              role: "UI/UX Designer",
-              profilePic:
-                "https://res.cloudinary.com/dxmeatsae/image/upload/v1745772539/client_verification_docs/mhpbkpi3vnkejxe0kpai.png",
-            },
-            {
-              _id: "user2",
-              name: "Michael Chen",
-              role: "Backend Developer",
-              profilePic:
-                "https://res.cloudinary.com/dxmeatsae/image/upload/v1745772539/client_verification_docs/mhpbkpi3vnkejxe0kpai.png",
-            },
-          ],
+      const response = await axios.get("http://localhost:5000/api/jobs/freelancer/teams", {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-        {
-          _id: "team2",
-          job: {
-            _id: "job2",
-            title: "Mobile App Development",
-            description: "Develop a cross-platform mobile app for fitness tracking",
-            client: {
-              _id: "client2",
-              name: "FitLife Solutions",
-              profilePic:
-                "https://res.cloudinary.com/dxmeatsae/image/upload/v1745772539/client_verification_docs/mhpbkpi3vnkejxe0kpai.png",
-            },
-            budget: 200000,
-            deadline: "2025-07-30T00:00:00.000Z",
-            createdAt: "2025-04-10T00:00:00.000Z",
-          },
-          role: {
-            title: "React Native Developer",
-            description: "Implement mobile UI components and integrate with backend APIs",
-            budget: 70000,
-          },
-          milestones: [
-            {
-              _id: "milestone4",
-              title: "User Authentication",
-              description: "Implement login, registration, and password recovery",
-              amount: 20000,
-              deadline: "2025-05-20T00:00:00.000Z",
-              status: "completed",
-              attachments: [
-                {
-                  name: "auth-screens.zip",
-                  url: "https://example.com/files/auth-screens.zip",
-                },
-              ],
-            },
-            {
-              _id: "milestone5",
-              title: "Dashboard & Analytics",
-              description: "Create user dashboard with activity charts and statistics",
-              amount: 25000,
-              deadline: "2025-06-15T00:00:00.000Z",
-              status: "active",
-              attachments: [],
-            },
-            {
-              _id: "milestone6",
-              title: "Workout Tracking",
-              description: "Implement workout logging and progress tracking features",
-              amount: 25000,
-              deadline: "2025-07-10T00:00:00.000Z",
-              status: "pending",
-              attachments: [],
-            },
-          ],
-          teammates: [
-            {
-              _id: "user3",
-              name: "Jessica Williams",
-              role: "UI/UX Designer",
-              profilePic:
-                "https://res.cloudinary.com/dxmeatsae/image/upload/v1745772539/client_verification_docs/mhpbkpi3vnkejxe0kpai.png",
-            },
-            {
-              _id: "user4",
-              name: "David Kim",
-              role: "Backend Developer",
-              profilePic:
-                "https://res.cloudinary.com/dxmeatsae/image/upload/v1745772539/client_verification_docs/mhpbkpi3vnkejxe0kpai.png",
-            },
-          ],
-        },
-      ]
-
-      setTeams(dummyTeams)
-      if (dummyTeams.length > 0) {
-        setSelectedTeam(dummyTeams[0])
-      }
+      })
+      console.log("Fetched teams:", response.data.data)
+      setTeams(response.data.data)
+      setLoading(false)
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to load teams. Please try again.")
-    } finally {
-      setIsLoading(false)
+      console.error("Error fetching teams:", err);
+      setError("Failed to fetch teams")
+      setLoading(false)
     }
   }
+  useEffect(() => {
 
+
+    fetchTeams()
+  }, [])
+
+  const openSubmitPopup = (milestone) => {
+    setSubmittingMilestone(milestone)
+    setIsSubmitPopupOpen(true)
+  }
+
+  const closeSubmitPopup = () => {
+    setIsSubmitPopupOpen(false)
+    setSubmittingMilestone(null)
+    setSubmissionMessage("")
+    setSubmissionFiles([])
+  }
   const handleSelectTeam = (team) => {
     setSelectedTeam(team)
   }
+
+  const handleSubmitMilestone = async () => {
+    if (!submittingMilestone) return;
+  
+    setIsSubmitting(true);
+    try {
+      setIsUploading(true);
+      // Upload files
+      const uploadedFiles = await Promise.all(submissionFiles.map(file => uploadFile(file)));
+      setIsUploading(false);
+  
+      // Prepare the submission data
+      const submissionData = {
+        message: submissionMessage,
+        attachments: uploadedFiles.map(url => ({ url, filename: url.split('/').pop() }))
+      };
+  
+      // Make the API call to submit the milestone
+      console.log(selectedTeam, 'is selected team');
+      const response = await axios.post(
+        `http://localhost:5000/api/freelancer/jobs/${selectedTeam._id}/milestones/${submittingMilestone._id}/submit`,
+        submissionData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      // Update the UI
+      const updatedTeams = teams.map((team) => {
+        if (team._id === selectedTeam._id) {
+          const updatedMilestones = team.freelancerDetails.milestones.map((m) => {
+            if (m._id === submittingMilestone._id) {
+              return { ...m, status: "submitted" };
+            }
+            return m;
+          });
+          return { ...team, freelancerDetails: { ...team.freelancerDetails, milestones: updatedMilestones } };
+        }
+        return team;
+      });
+  
+      setTeams(updatedTeams);
+      if (selectedTeam) {
+        const updatedSelectedTeam = updatedTeams.find((team) => team._id === selectedTeam._id);
+        setSelectedTeam(updatedSelectedTeam);
+      }
+  
+      // Close popup and reset form
+      closeSubmitPopup();
+  
+      // Show success message
+      alert("Milestone submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting milestone:", error);
+      alert("Failed to submit milestone. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   const toggleMilestoneExpand = (milestoneId) => {
     setExpandedMilestones((prev) => ({
@@ -209,30 +159,6 @@ const MyTeams = () => {
     }))
   }
 
-  const handleSubmitMilestone = async (milestone) => {
-    // This would be the actual API call in a real application
-    alert(`Submitting milestone: ${milestone.title}`)
-
-    // Update the milestone status in the UI
-    const updatedTeams = teams.map((team) => {
-      if (team._id === selectedTeam._id) {
-        const updatedMilestones = team.milestones.map((m) => {
-          if (m._id === milestone._id) {
-            return { ...m, status: "submitted" }
-          }
-          return m
-        })
-        return { ...team, milestones: updatedMilestones }
-      }
-      return team
-    })
-
-    setTeams(updatedTeams)
-    if (selectedTeam) {
-      const updatedSelectedTeam = updatedTeams.find((team) => team._id === selectedTeam._id)
-      setSelectedTeam(updatedSelectedTeam)
-    }
-  }
 
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -305,20 +231,19 @@ const MyTeams = () => {
                     <div
                       key={team._id}
                       onClick={() => handleSelectTeam(team)}
-                      className={`p-3 rounded-md cursor-pointer transition-colors ${
-                        selectedTeam?._id === team._id
-                          ? "bg-[#9333EA]/20 border border-[#9333EA]/50"
-                          : "hover:bg-[#1e1e2d]"
-                      }`}
+                      className={`p-3 rounded-md cursor-pointer transition-colors ${selectedTeam?._id === team._id
+                        ? "bg-[#9333EA]/20 border border-[#9333EA]/50"
+                        : "hover:bg-[#1e1e2d]"
+                        }`}
                     >
-                      <h3 className="font-medium mb-1">{team.job.title}</h3>
+                      <h3 className="font-medium mb-1">{team.title}</h3>
                       <div className="flex items-center text-sm text-gray-400">
                         <Users size={14} className="mr-1" />
                         <span>{team.teammates.length + 1} team members</span>
                       </div>
                       <div className="flex items-center text-sm text-gray-400 mt-1">
                         <Calendar size={14} className="mr-1" />
-                        <span>Due {formatDate(team.job.deadline)}</span>
+                        <span>Due {formatDate(team.deadline)}</span>
                       </div>
                     </div>
                   ))}
@@ -332,26 +257,29 @@ const MyTeams = () => {
                 {/* Project Overview */}
                 <div className="bg-[#121218] rounded-lg border border-[#2d2d3a] overflow-hidden">
                   <div className="p-6 border-b border-[#2d2d3a]">
-                    <h2 className="text-xl font-bold">{selectedTeam.job.title}</h2>
+                    <h2 className="text-xl font-bold">{selectedTeam.title}</h2>
                   </div>
                   <div className="p-6">
                     <div className="prose prose-invert max-w-none">
-                      <p className="text-gray-300">{selectedTeam.job.description}</p>
+                      <p className="text-gray-300">{selectedTeam.description}</p>
                     </div>
 
                     <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div className="bg-[#1e1e2d] p-4 rounded-lg">
                         <h3 className="text-sm font-medium text-gray-400 mb-1">Your Role</h3>
-                        <p className="text-lg font-bold">{selectedTeam.role.title}</p>
-                        <p className="text-sm text-gray-300 mt-1">{selectedTeam.role.description}</p>
+                        <p className="text-lg font-bold">{selectedTeam.freelancerDetails?.role}</p>
                       </div>
                       <div className="bg-[#1e1e2d] p-4 rounded-lg">
-                        <h3 className="text-sm font-medium text-gray-400 mb-1">Budget</h3>
-                        <p className="text-lg font-bold">PKR {selectedTeam.role.budget.toLocaleString()}</p>
+                        <h3 className="text-sm font-medium text-green-400 mb-1">Total Earned</h3>
+                        <p className="text-lg font-bold">PKR {selectedTeam.freelancerDetails.totalEarnings.toLocaleString()}</p>
+                      </div>
+                      <div className="bg-[#1e1e2d] p-4 rounded-lg">
+                        <h3 className="text-sm font-medium text-gray-400 mb-1">In Progress</h3>
+                        <p className="text-lg font-bold">PKR {selectedTeam.freelancerDetails.workInProgress.toLocaleString()}</p>
                       </div>
                       <div className="bg-[#1e1e2d] p-4 rounded-lg">
                         <h3 className="text-sm font-medium text-gray-400 mb-1">Deadline</h3>
-                        <p className="text-lg font-bold">{formatDate(selectedTeam.job.deadline)}</p>
+                        <p className="text-lg font-bold">{formatDate(selectedTeam.deadline)}</p>
                       </div>
                     </div>
 
@@ -359,10 +287,10 @@ const MyTeams = () => {
                     <div className="mt-6">
                       <h3 className="text-lg font-bold mb-3">Client</h3>
                       <div className="flex items-center bg-[#1e1e2d] p-4 rounded-lg">
-                        {selectedTeam.job.client.profilePic ? (
+                        {selectedTeam.client.profilePic ? (
                           <img
-                            src={selectedTeam.job.client.profilePic || "/placeholder.svg"}
-                            alt={selectedTeam.job.client.name}
+                            src={selectedTeam.client.profilePic || "/placeholder.svg"}
+                            alt={selectedTeam.client.name}
                             className="w-12 h-12 rounded-full object-cover mr-3"
                           />
                         ) : (
@@ -371,7 +299,7 @@ const MyTeams = () => {
                           </div>
                         )}
                         <div>
-                          <h4 className="font-bold">{selectedTeam.job.client.name}</h4>
+                          <h4 className="font-bold">{selectedTeam.client.name}</h4>
                           <button className="text-sm text-[#9333EA] hover:text-[#a855f7] mt-1 flex items-center">
                             <MessageSquare size={14} className="mr-1" />
                             Message Client
@@ -397,13 +325,13 @@ const MyTeams = () => {
                           </div>
                           <div>
                             <h4 className="font-bold">{user.name} (You)</h4>
-                            <p className="text-sm text-gray-300">{selectedTeam.role.title}</p>
+                            <p className="text-sm text-gray-300">{selectedTeam.freelancerDetails.role}</p>
                           </div>
                         </div>
                       </div>
 
                       {/* Other Team Members */}
-                      {selectedTeam.teammates.map((teammate) => (
+                      {selectedTeam?.teammates?.map((teammate) => (
                         <div key={teammate._id} className="bg-[#1e1e2d] p-4 rounded-lg">
                           <div className="flex items-center">
                             {teammate.profilePic ? (
@@ -439,18 +367,17 @@ const MyTeams = () => {
                   </div>
                   <div className="p-6">
                     <div className="space-y-4">
-                      {selectedTeam.milestones.map((milestone) => (
+                      {selectedTeam?.freelancerDetails.milestones?.map((milestone) => (
                         <div
                           key={milestone._id}
-                          className={`bg-[#1e1e2d] rounded-lg border ${
-                            milestone.status === "active"
-                              ? "border-yellow-500/30"
-                              : milestone.status === "completed"
-                                ? "border-green-500/30"
-                                : milestone.status === "submitted"
-                                  ? "border-blue-500/30"
-                                  : "border-[#2d2d3a]"
-                          }`}
+                          className={`bg-[#1e1e2d] rounded-lg border ${milestone.status === "active"
+                            ? "border-yellow-500/30"
+                            : milestone.status === "completed"
+                              ? "border-green-500/30"
+                              : milestone.status === "submitted"
+                                ? "border-blue-500/30"
+                                : "border-[#2d2d3a]"
+                            }`}
                         >
                           <div className="p-4 cursor-pointer" onClick={() => toggleMilestoneExpand(milestone._id)}>
                             <div className="flex justify-between items-center">
@@ -471,23 +398,21 @@ const MyTeams = () => {
                               </div>
                               <div className="flex items-center">
                                 <span
-                                  className={`text-sm px-2 py-1 rounded-full mr-3 ${
-                                    milestone.status === "active"
-                                      ? "bg-yellow-500/10 text-yellow-500"
-                                      : milestone.status === "completed"
-                                        ? "bg-green-500/10 text-green-500"
-                                        : milestone.status === "submitted"
-                                          ? "bg-blue-500/10 text-blue-500"
-                                          : "bg-gray-500/10 text-gray-400"
-                                  }`}
+                                  className={`text-sm px-2 py-1 rounded-full mr-3 ${milestone.status === "active"
+                                    ? "bg-yellow-500/10 text-yellow-500"
+                                    : milestone.status === "completed"
+                                      ? "bg-green-500/10 text-green-500"
+                                      : milestone.status === "submitted"
+                                        ? "bg-blue-500/10 text-blue-500"
+                                        : "bg-gray-500/10 text-gray-400"
+                                    }`}
                                 >
                                   {milestone.status.charAt(0).toUpperCase() + milestone.status.slice(1)}
                                 </span>
                                 <ChevronDown
                                   size={18}
-                                  className={`transition-transform ${
-                                    expandedMilestones[milestone._id] ? "transform rotate-180" : ""
-                                  }`}
+                                  className={`transition-transform ${expandedMilestones[milestone._id] ? "transform rotate-180" : ""
+                                    }`}
                                 />
                               </div>
                             </div>
@@ -530,15 +455,18 @@ const MyTeams = () => {
                                 </div>
                               )}
 
-                              {milestone.status === "active" && (
-                                <button
-                                  onClick={() => handleSubmitMilestone(milestone)}
-                                  className="w-full bg-[#9333EA] hover:bg-[#a855f7] text-white px-4 py-2 rounded-md flex items-center justify-center transition-colors mt-2"
-                                >
-                                  <Upload size={16} className="mr-2" />
-                                  Submit Milestone
-                                </button>
+                              {milestone.status === "in-progress" && (
+                                <div className="mt-4">
+                                  <button
+                                    onClick={() => openSubmitPopup(milestone)}
+                                    className="w-full bg-[#9333EA] hover:bg-[#a855f7] text-white px-4 py-2 rounded-md flex items-center justify-center transition-colors"
+                                  >
+                                    <Upload size={16} className="mr-2" />
+                                    Submit Milestone
+                                  </button>
+                                </div>
                               )}
+
 
                               {milestone.status === "submitted" && (
                                 <div className="bg-blue-500/10 border border-blue-500/30 rounded-md p-3 mt-2">
@@ -568,6 +496,66 @@ const MyTeams = () => {
           </div>
         )}
       </div>
+      {isSubmitPopupOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-[#121218] rounded-lg p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Submit Milestone</h3>
+              <button onClick={closeSubmitPopup} className="text-gray-400 hover:text-white">
+                <X size={24} />
+              </button>
+            </div>
+            <textarea
+              value={submissionMessage}
+              onChange={(e) => setSubmissionMessage(e.target.value)}
+              placeholder="Enter your submission message..."
+              className="w-full bg-[#2d2d3a] text-white p-2 rounded-md mb-4"
+              rows="4"
+            ></textarea>
+            <div className="mb-4">
+              <input
+                type="file"
+                onChange={handleFileChange}
+                multiple
+                className="hidden"
+                id="file-upload"
+              />
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer bg-[#2d2d3a] text-white px-4 py-2 rounded-md inline-block"
+              >
+                Choose Files
+              </label>
+              <span className="ml-2 text-sm text-gray-400">
+                {submissionFiles.length} file(s) selected
+              </span>
+            </div>
+            <button
+              onClick={handleSubmitMilestone}
+              disabled={isUploading || isSubmitting}
+              className="w-full bg-[#9333EA] hover:bg-[#a855f7] text-white px-4 py-2 rounded-md flex items-center justify-center transition-colors"
+            >
+              {isUploading ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Uploading...
+                </>
+              ) : isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Upload size={16} className="mr-2" />
+                  Submit Milestone
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
+
     </div>
   )
 }
