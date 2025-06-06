@@ -827,7 +827,7 @@ export const approveMilestone = async (req, res) => {
 
     if (!milestone) return customErrorHandler(res, new Error('Milestone not found'), 404);
 
-    if (milestone.status !== 'in-progress') {
+    if (milestone.status !== 'submitted') {
       return customErrorHandler(res, new Error('Can only approve in-progress milestones'), 400);
     }
 
@@ -1054,4 +1054,75 @@ export const getClientCrowdsourcedJobs = async (req, res, next) => {
   }
 };
 
+export const getFreelancerCrowdsourcedJobs = async (req, res, next) => {
+  try {
+    const freelancerId = req.user._id;
 
+    const crowdsourcedJobs = await Job.find({
+      'team.freelancer': freelancerId,
+      isCrowdsourced: true
+    }).populate('client', 'name email profilePic')
+      .populate('team.freelancer', 'name email profilePic')
+      .populate('groupConversation')
+      .sort({ createdAt: -1 });
+
+    if (!crowdsourcedJobs || crowdsourcedJobs.length === 0) {
+      return successResponse(res, 200, 'No crowdsourced jobs found for this freelancer.', []);
+    }
+
+    const formattedJobs = crowdsourcedJobs.map((job) => {
+      const freelancerTeamMember = job.team.find(member => member.freelancer._id.toString() === freelancerId.toString());
+      
+      const teammates = job.team
+        .filter(member => member.freelancer._id.toString() !== freelancerId.toString())
+        .map(member => ({
+          _id: member.freelancer._id,
+          name: member.freelancer.name,
+          email: member.freelancer.email,
+          profilePic: member.freelancer.profilePic,
+          role: member.role
+        }));
+
+      // Calculate total earnings from completed milestones
+      const totalEarnings = freelancerTeamMember.milestones
+        .filter(milestone => milestone.status === 'completed')
+        .reduce((sum, milestone) => sum + milestone.amount, 0);
+
+      // Calculate total amount of in-progress milestones
+      const workInProgress = freelancerTeamMember.milestones
+        .filter(milestone => milestone.status === 'in-progress')
+        .reduce((sum, milestone) => sum + milestone.amount, 0);
+
+      return {
+        _id: job._id,
+        title: job.title,
+        description: job.description,
+        status: job.status,
+        totalBudget: job.budget,
+        deadline: job.deadline,
+        createdAt: job.createdAt,
+        client: {
+          _id: job.client._id,
+          name: job.client.name,
+          email: job.client.email,
+          profilePic: job.client.profilePic
+        },
+        freelancerDetails: {
+          teamId: freelancerTeamMember._id, // Include the teamId for the freelancer
+          role: freelancerTeamMember.role,
+          totalEarnings: totalEarnings,
+          workInProgress: workInProgress,
+          milestones: freelancerTeamMember.milestones,
+          status: freelancerTeamMember.status
+        },
+        teammates: teammates,
+        groupConversationId: job.groupConversation ? job.groupConversation._id : null
+      };
+    });
+
+    return successResponse(res, 200, 'Crowdsourced jobs retrieved successfully.', formattedJobs);
+  } catch (error) {
+    console.error('Error in getFreelancerCrowdsourcedJobs:', error);
+    return next(new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Unable to fetch crowdsourced jobs.'));
+  }
+};

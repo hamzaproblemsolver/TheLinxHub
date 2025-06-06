@@ -95,7 +95,7 @@ const bidSchema = new mongoose.Schema(
           status: {
             type: String,
             enum: {
-              values: ['pending', 'in-progress', 'completed', 'paid', 'disputed'],
+              values: ['pending', 'in-progress', 'submitted', 'completed', 'paid', 'disputed'],
               message: 'Status must be a valid option',
             },
             default: 'pending',
@@ -105,6 +105,21 @@ const bidSchema = new mongoose.Schema(
           },
           paidAt: {
             type: Date,
+          },
+          submission: {
+            message: {
+              type: String,
+              trim: true,
+            },
+            attachments: [
+              {
+                filename: String,
+                url: String,
+              }
+            ],
+            submittedAt: {
+              type: Date,
+            },
           },
         },
       ],

@@ -4,6 +4,7 @@ import {
   respondToJobOffer,
   respondToTeamOffer,
   getPendingOffers,
+  submitMilestone,
   searchFreelancers
 } from '../controllers/freelancerController.js';
 
@@ -11,9 +12,11 @@ const router = express.Router();
 
 // Protect all routes
 
+router.post('/jobs/:jobId/milestones/:milestoneId/submit',protect,authorize('freelancer'), submitMilestone);
 
 router.post('/jobs/:jobId/offer/:offerId/respond',protect,authorize('freelancer'), respondToJobOffer);
 router.post('/jobs/:jobId/team-offer/:offerId/respond',protect,authorize('freelancer'), respondToTeamOffer);
+
 
 // Get all pending offers for the freelancer
 router.get('/offers/pending',protect,authorize('freelancer'), getPendingOffers);

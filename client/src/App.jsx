@@ -76,15 +76,16 @@ export default function App() {
         <Routes>
 
           {/* Public Routes */}
-          <Route path="/" element={<UserLayout />}>
+          {/* <Route path="/" element={<UserLayout />}>
             <Route index element={
               isFreelancer ? <Freelancer /> : 
               isClient ? <Client /> : 
               <Home />
             } />
-          </Route>
+          </Route> */}
 
           <Route path="/" element={<PublicLayouts />}>
+            <Route index element={ <Home />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<RoleSelection />} />
             <Route path="signup/freelancer" element={<FreelancerRegister />} />

@@ -82,7 +82,7 @@ const ClientDashboard = () => {
                 <span>Your company is not verified. Some features may be limited.</span>
               </div>
               <button
-                onClick={() => navigate("/verify-company")}
+                onClick={() => navigate("/client/verify-company")}
                 className="bg-[#9333EA] text-white px-4 py-2 rounded hover:bg-gray-800"
               >
                 Verify Now

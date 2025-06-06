@@ -52,6 +52,9 @@ const handleSocketEvents = (io) => {
     socket.on('send-message', (message) => {
       console.log({message}, "Message sent from client to server");
       const receiverSocketId = users.get(message.receiverId)
+      console.log("Receiver socket ID:", receiverSocketId);
+      console.log("receiver Id",message.receiverId)
+      console.log("sender Id",message.message.senderId)
       socket.to(receiverSocketId).emit("receive-message", message.message)
       socket.to(message.conversationId).emit('new_message', message.message); // EMIT matching frontend
     });

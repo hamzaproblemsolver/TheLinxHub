@@ -146,8 +146,7 @@ const JobBids = () => {
           </p>
         </div>
         <div className="flex items-center mb-2">
-          <DollarSign className="text-[#9333EA] mr-2" size={18} />
-          <span className="font-semibold text-white">${bid.budget}</span>
+          <span className="font-semibold text-white">PKR {bid.budget}</span>
         </div>
         <div className="flex items-center mb-2">
           <Clock className="text-[#9333EA] mr-2" size={18} />
@@ -243,9 +242,37 @@ const JobBids = () => {
             <h4 className="text-lg font-semibold text-white mb-2">Proposal</h4>
             <p className="text-gray-300">{bid.proposal}</p>
           </div>
+          <div>
+          <h4 className="text-lg font-semibold text-white mb-2">Milestones</h4>
+          {bid.milestones && bid.milestones.length > 0 ? (
+            <div className="space-y-4">
+              {bid.milestones.map((milestone, index) => (
+                <div key={milestone._id} className="bg-[#2d2d3a] p-4 rounded-lg">
+                  <h5 className="text-md font-semibold text-white">{milestone.title}</h5>
+                  <p className="text-gray-300 text-sm mt-1">{milestone.description}</p>
+                  <div className="flex justify-between items-center mt-2">
+                    <span className="text-gray-400 text-sm">Amount: PKR {milestone.amount}</span>
+                    <span className="text-gray-400 text-sm">Due: {new Date(milestone.dueDate).toLocaleDateString()}</span>
+                  </div>
+                  <div className="mt-2">
+                    <span className={`text-sm px-2 py-1 rounded ${
+                      milestone.status === 'pending' ? 'bg-yellow-500 text-yellow-900' :
+                      milestone.status === 'completed' ? 'bg-green-500 text-green-900' :
+                      'bg-gray-500 text-gray-900'
+                    }`}>
+                      {milestone.status.charAt(0).toUpperCase() + milestone.status.slice(1)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-300">No milestones specified for this bid.</p>
+          )}
+        </div>
+
           <div className="flex items-center">
-            <DollarSign className="text-[#9333EA] mr-2" size={18} />
-            <span className="font-semibold text-white">${bid.budget}</span>
+            <span className="font-semibold text-white">PKR {bid.budget}</span>
           </div>
           <div className="flex items-center">
             <Clock className="text-[#9333EA] mr-2" size={18} />

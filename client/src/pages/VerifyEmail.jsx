@@ -97,7 +97,7 @@ export default function VerifyCode() {
             </button>
           </form>
           <div className="mt-4 text-center">
-            {canResend ? (
+            {/* {canResend ? (
               <button
                 onClick={handleResend}
                 className="text-[#6300B3] hover:text-[#5600A1]"
@@ -109,7 +109,7 @@ export default function VerifyCode() {
               <p className="text-gray-200">
                 Resend code in {countdown} seconds
               </p>
-            )}
+            )} */}
           </div>
         </motion.div>
       </div>

@@ -135,7 +135,7 @@ export const respondToJobOffer = async (req, res) => {
       // Notify client
       await Notification.create({
         recipient: job.client._id,
-        type: 'offer-rejected',
+        type: 'job-updated',
         title: 'Job Offer Rejected',
         message: `Your offer for "${job.title}" has been rejected by the freelancer.`,
         data: {
@@ -303,7 +303,7 @@ export const respondToTeamOffer = async (req, res) => {
       // Notify client
       await Notification.create({
         recipient: job.client._id,
-        type: 'team-offer-rejected',
+        type: 'job-updated',
         title: 'Team Offer Rejected',
         message: `Your team offer for "${job.title}" (${offer.role}) has been rejected by the freelancer.`,
         data: {
@@ -448,4 +448,71 @@ export const searchFreelancers = async (req, res) => {
   }
 };
 
+export const submitMilestone = async (req, res) => {
+  try {
+    const { jobId, milestoneId } = req.params;
+    const { message, attachments } = req.body;
 
+    const job = await Job.findById(jobId);
+    if (!job) {
+      return customErrorHandler(res, new Error('Job not found'), 404);
+    }
+
+    let teamMember, milestone;
+    if (job.isCrowdsourced) {
+      teamMember = job.team.find(member => member.freelancer.toString() === req.user._id.toString());
+      if (!teamMember) {
+        return customErrorHandler(res, new Error('You are not a member of this team'), 403);
+      }
+      milestone = teamMember.milestones.id(milestoneId);
+    } else {
+      milestone = job.milestones.id(milestoneId);
+    }
+
+    if (!milestone) {
+      return customErrorHandler(res, new Error('Milestone not found'), 404);
+    }
+
+    if (milestone.status !== 'in-progress') {
+      return customErrorHandler(res, new Error('This milestone is not in progress'), 400);
+    }
+
+    // Update milestone
+    milestone.status = 'submitted';
+    milestone.submission = {
+      message,
+      attachments: attachments.map(attachment => ({
+        url: attachment.url
+      })),
+      submittedAt: new Date(),
+    };
+
+    await job.save();
+
+    // Notify client
+    await Notification.create({
+      recipient: job.client,
+      type: 'milestone-submitted',
+      title: 'Milestone Submitted',
+      message: `A milestone for "${job.title}" has been submitted for review.`,
+      data: {
+        job: job._id,
+        milestone: milestone._id,
+      },
+    });
+
+    // Send email notification to client
+    const client = await User.findById(job.client);
+    await sendEmail({
+      to: client.email,
+      subject: 'Milestone Submitted for Review',
+      text: `A milestone for the job "${job.title}" has been submitted for your review. Please log in to your account to check the submission and provide feedback.`,
+    });
+
+    return successResponse(res, 200, 'Milestone submitted successfully', {
+      milestone: milestone,
+    });
+  } catch (error) {
+    return customErrorHandler(res, error);
+  }
+};

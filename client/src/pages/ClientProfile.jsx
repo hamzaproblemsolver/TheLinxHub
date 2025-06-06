@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams} from "react-router-dom"
 import { useSelector } from "react-redux"
 import { motion } from "framer-motion"
 import {uploadFile} from '../services/fileUpload'
@@ -12,6 +12,8 @@ import ProfileHeader from "../components/profileHeader"
 const ClientProfile = () => {
   const navigate = useNavigate()
   const user = useSelector((state) => state.Auth?.user)
+  const { userId } = useParams()
+  
 
   const [profileData, setProfileData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -26,6 +28,7 @@ const ClientProfile = () => {
   })
   const [isSaving, setIsSaving] = useState(false)
   const [successMessage, setSuccessMessage] = useState("")
+  const isOwnProfile = !userId || (user && userId === user._id)
 
   // Check if user is authorized
   useEffect(() => {
@@ -60,6 +63,7 @@ const ClientProfile = () => {
       setProfileData(data.data.user)
 
       // Initialize form data
+
       setFormData({
         name: data.data.user.name || "",
         companyName: data.data.user.companyName || "",
@@ -191,7 +195,8 @@ const ClientProfile = () => {
 
       <ProfileHeader
         user={profileData}
-        isEditing={isEditing}
+        isEditing={isEditing && isOwnProfile}
+        isOwnProfile={isOwnProfile}
         onEdit={handleEdit}
         onSave={handleSave}
         onCancel={handleCancel}
@@ -450,7 +455,7 @@ const ClientProfile = () => {
             </div>
 
             {/* Payment Information */}
-            <div className="bg-[#121218] rounded-lg border border-[#2d2d3a] overflow-hidden">
+            {/* <div className="bg-[#121218] rounded-lg border border-[#2d2d3a] overflow-hidden">
               <div className="p-6 border-b border-[#2d2d3a]">
                 <h2 className="text-xl font-bold">Payment Information</h2>
               </div>
@@ -473,6 +478,9 @@ const ClientProfile = () => {
                 </div>
               </div>
             </div>
+ */}
+
+
           </div>
         </div>
       </div>

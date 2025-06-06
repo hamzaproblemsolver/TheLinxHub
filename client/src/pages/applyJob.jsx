@@ -57,7 +57,7 @@ const ApplyJob = () => {
   const [job, setJob] = useState(null)
   const [uploadingFiles, setUploadingFiles] = useState(false)
   const [dragActive, setDragActive] = useState(false)
-  const token= localStorage.getItem("authToken")
+  const token = localStorage.getItem("authToken")
 
   // Application data state
   const [applicationData, setApplicationData] = useState({
@@ -83,7 +83,7 @@ const ApplyJob = () => {
 
   // Check if user is authorized (freelancer role)
   useEffect(() => {
-   
+
     if (!user) {
       navigate("/login", {
         state: { from: `/apply-job/${jobId}`, message: "Please login to apply for jobs" },
@@ -417,8 +417,7 @@ const ApplyJob = () => {
               <h2 className="text-xl font-bold">{job.title}</h2>
               <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-gray-400">
                 <span className="flex items-center">
-                  <DollarSign size={16} className="mr-1" />
-                  Budget: ${job.budget.toLocaleString()}
+                  Budget: PKR {job.budget.toLocaleString()}
                 </span>
                 <span className="flex items-center">
                   <Calendar size={16} className="mr-1" />
@@ -457,11 +456,10 @@ const ApplyJob = () => {
                     {job.crowdsourcingRoles.map((role, index) => (
                       <div
                         key={index}
-                        className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                          applicationData.role === role.title
+                        className={`p-4 rounded-lg border cursor-pointer transition-all ${applicationData.role === role.title
                             ? "border-[#9333EA] bg-[#9333EA]/10"
                             : "border-[#2d2d3a] bg-[#1e1e2d] hover:border-[#9333EA]/50"
-                        }`}
+                          }`}
                         onClick={() => {
                           handleChange("role", role.title)
                           handleChange("budget", role.budget)
@@ -556,11 +554,13 @@ const ApplyJob = () => {
                       id="budget"
                       type="number"
                       step="50"
-                      value={applicationData.budget}
-                      onChange={(e) => handleChange("budget", Number(e.target.value))}
+                      value={applicationData.budget === 0 ? '' : applicationData.budget}
+                      onChange={(e) => {
+                        const value = e.target.value === '' ? 0 : Number(e.target.value);
+                        handleChange("budget", value);
+                      }}
                       className="w-full pl-10 pr-4 py-3 bg-[#1e1e2d] border border-[#2d2d3a] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#9333EA] focus:border-transparent"
                       required
-                      disabled={job?.isCrowdsourced}
                     />
                   </div>
                   <p className="mt-1 text-xs text-gray-400">
@@ -626,9 +626,8 @@ const ApplyJob = () => {
               <div>
                 <label className="block text-sm font-medium mb-2">Attachments</label>
                 <div
-                  className={`border-2 border-dashed rounded-lg p-6 text-center ${
-                    dragActive ? "border-[#9333EA] bg-[#9333EA]/5" : "border-[#2d2d3a]"
-                  }`}
+                  className={`border-2 border-dashed rounded-lg p-6 text-center ${dragActive ? "border-[#9333EA] bg-[#9333EA]/5" : "border-[#2d2d3a]"
+                    }`}
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
                   onDragOver={handleDrag}
@@ -652,11 +651,10 @@ const ApplyJob = () => {
                       type="button"
                       onClick={() => fileInputRef.current.click()}
                       disabled={uploadingFiles}
-                      className={`mt-4 px-4 py-2 rounded-md cursor-pointer transition-colors ${
-                        uploadingFiles
+                      className={`mt-4 px-4 py-2 rounded-md cursor-pointer transition-colors ${uploadingFiles
                           ? "bg-[#1e1e2d] text-gray-400 cursor-not-allowed"
                           : "bg-[#1e1e2d] hover:bg-[#2d2d3a]"
-                      }`}
+                        }`}
                     >
                       {uploadingFiles ? (
                         <div className="flex items-center">
@@ -774,8 +772,11 @@ const ApplyJob = () => {
                           id={`milestone-amount-${index}`}
                           type="number"
                           min="0"
-                          value={milestone.amount}
-                          onChange={(e) => handleMilestoneChange(index, "amount", Number(e.target.value))}
+                          value={milestone.amount === 0 ? '' : milestone.amount}
+                          onChange={(e) => {
+                            const value = e.target.value === '' ? 0 : Number(e.target.value);
+                            handleMilestoneChange(index, "amount", value);
+                          }}
                           className="w-full pl-10 pr-4 py-3 bg-[#0a0a0f] border border-[#2d2d3a] rounded-md text-white focus:outline-none focus:ring-2 focus:ring-[#9333EA] focus:border-transparent"
                           required
                         />
@@ -823,9 +824,8 @@ const ApplyJob = () => {
                   <p className="font-bold">PKR {totalMilestoneAmount.toLocaleString()}</p>
                 </div>
                 <p
-                  className={`text-sm mt-1 ${
-                    totalMilestoneAmount !== Number(applicationData.budget) ? "text-red-400" : "text-green-400"
-                  }`}
+                  className={`text-sm mt-1 ${totalMilestoneAmount !== Number(applicationData.budget) ? "text-red-400" : "text-green-400"
+                    }`}
                 >
                   {totalMilestoneAmount !== Number(applicationData.budget)
                     ? `Total milestone amount must equal your bid amount (PKR ${applicationData.budget})`
@@ -840,11 +840,10 @@ const ApplyJob = () => {
             <button
               type="submit"
               disabled={!isFormValid() || submitting || uploadingFiles}
-              className={`flex items-center gap-2 px-6 py-3 rounded-md transition-colors ${
-                !isFormValid() || submitting || uploadingFiles
+              className={`flex items-center gap-2 px-6 py-3 rounded-md transition-colors ${!isFormValid() || submitting || uploadingFiles
                   ? "bg-[#9333EA]/50 text-white/70 cursor-not-allowed"
                   : "bg-[#9333EA] hover:bg-[#a855f7] text-white"
-              }`}
+                }`}
             >
               {submitting ? (
                 <>

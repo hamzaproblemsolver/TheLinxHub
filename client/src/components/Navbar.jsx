@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, ChevronDown, Bell, MessageSquare, Settings, LogOut, User, Users, Briefcase, Shield, CheckCircle, AlertCircle, Clock } from 'lucide-react';
 import { logout, fetchUserProfile } from "../redux/AuthSlice";
 
@@ -16,6 +16,7 @@ const Navbar = () => {
   const [userProfile, setUserProfile] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation(); // Add this line to get the current location
 
   // Fetch user profile from API
   useEffect(() => {
@@ -147,7 +148,7 @@ const Navbar = () => {
         return {
           text: 'Verify Your Company',
           icon: <Shield size={16} className="mr-2 text-yellow-500" />,
-          action: () => navigate('/verify-company')
+          action: () => navigate('/client/verify-company')
         };
       case 'pending':
         return {
@@ -206,7 +207,11 @@ const Navbar = () => {
             <Link
               key={index}
               to={link.href}
-              className="text-sm font-medium text-white hover:text-[#9333EA] transition-colors"
+              className={`text-sm font-medium transition-colors ${
+                location.pathname === link.href
+                  ? "text-[#9333EA]" // Highlighted state
+                  : "text-white hover:text-[#9333EA]" // Normal state
+              }`}
             >
               {link.name}
             </Link>
@@ -324,7 +329,11 @@ const Navbar = () => {
               <Link
                 key={index}
                 to={link.href}
-                className="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-[#2d2d3a] transition-colors"
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  location.pathname === link.href
+                    ? "bg-[#2d2d3a] text-[#9333EA]" // Highlighted state
+                    : "text-white hover:bg-[#2d2d3a]" // Normal state
+                }`}
                 onClick={closeMenu}
               >
                 {link.name}

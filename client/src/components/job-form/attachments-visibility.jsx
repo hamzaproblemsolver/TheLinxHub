@@ -127,7 +127,7 @@ const AttachmentsVisibility = ({ jobData, handleChange }) => {
       )}
 
       {/* Visibility Options */}
-      <div className="space-y-4 mt-8">
+      {/* <div className="space-y-4 mt-8">
         <h3 className="font-medium">Job Visibility</h3>
         <div className="space-y-3">
           <div
@@ -174,7 +174,7 @@ const AttachmentsVisibility = ({ jobData, handleChange }) => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Promotion Option */}
       {/* <div className="mt-8">

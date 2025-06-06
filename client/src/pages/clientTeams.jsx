@@ -12,7 +12,6 @@ import {
   AlertCircle,
   ChevronRight,
   Plus,
-  Upload,
   Download,
   Calendar,
   X,
@@ -34,7 +33,7 @@ const ClientTeams = () => {
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/jobs/teams", {
+        const response = await axios.get("http://localhost:5000/api/jobs/client/teams", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -60,10 +59,44 @@ const ClientTeams = () => {
     setSelectedMember(member)
   }
 
-  const handleApproveMilestone = async (jobId, milestoneId) => {
+  const handleApproveMilestone = async (jobId, freelancerId, milestoneId) => {
     try {
       await axios.post(
-        `http://localhost:5000/api/jobs/${jobId}/milestones/${milestoneId}/approveAttachment`,
+        `http://localhost:5000/api/jobs/${jobId}/milestones/${milestoneId}/approve`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      )
+
+      // Refresh the team data
+      const response = await axios.get("http://localhost:5000/api/jobs/client/teams", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      setTeams(response.data.data)
+
+      // Update the selected team and member
+      const updatedTeam = response.data.data.find((t) => t._id === selectedTeam._id)
+      setSelectedTeam(updatedTeam)
+
+      if (selectedMember) {
+        const updatedMember = updatedTeam.team.find((m) => m._id === selectedMember._id)
+        setSelectedMember(updatedMember)
+      }
+    } catch (err) {
+      console.error("Error approving milestone:", err)
+    }
+  }
+
+  const handleRequestRevision = async (jobId, freelancerId, milestoneId) => {
+    try {
+      // You'll need to implement this API endpoint on your backend
+      await axios.post(
+        `http://localhost:5000/api/jobs/${jobId}/freelancer/${freelancerId}/milestone/${milestoneId}/requestRevision`,
         {},
         {
           headers: {
@@ -89,7 +122,7 @@ const ClientTeams = () => {
         setSelectedMember(updatedMember)
       }
     } catch (err) {
-      console.error("Error approving milestone:", err)
+      console.error("Error requesting revision:", err)
     }
   }
 
@@ -127,7 +160,7 @@ const ClientTeams = () => {
         setSuccess(true)
 
         // Refresh the team data
-        const response = await axios.get("http://localhost:5000/api/jobs/teams", {
+        const response = await axios.get("http://localhost:5000/api/jobs/client/teams", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -393,7 +426,9 @@ const ClientTeams = () => {
                             <img
                               src={
                                 member.freelancer.profilePic ||
-                                "https://res.cloudinary.com/dxmeatsae/image/upload/v1745772539/client_verification_docs/mhpbkpi3vnkejxe0kpai.png"
+                                "https://res.cloudinary.com/dxmeatsae/image/upload/v1745772539/client_verification_docs/mhpbkpi3vnkejxe0kpai.png" ||
+                                "/placeholder.svg" ||
+                                "/placeholder.svg"
                               }
                               alt={member.freelancer.name}
                               className="w-10 h-10 rounded-full mr-3"
@@ -432,39 +467,127 @@ const ClientTeams = () => {
 
                     <div className="mb-6">
                       <h3 className="text-md font-medium text-gray-300 mb-2">Active Milestones</h3>
-                      {selectedMember.milestones.filter((m) => !m.isCompleted).length === 0 ? (
+                      {selectedMember.milestones.filter((m) => m.status === "in-progress").length === 0 ? (
                         <p className="text-gray-400 text-sm py-2">No active milestones</p>
                       ) : (
                         <div className="space-y-3">
                           {selectedMember.milestones
-                            .filter((m) => !m.isCompleted)
+                            .filter((m) => m.status === "in-progress")
                             .map((milestone) => (
                               <div key={milestone._id} className="bg-[#2d2d3a] p-3 rounded-lg">
                                 <h4 className="font-medium">{milestone.title}</h4>
                                 <p className="text-sm text-gray-400 mt-1">{milestone.description}</p>
                                 <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
                                   <div className="flex items-center text-sm">
-                                    <DollarSign size={14} className="text-[#9333EA] mr-1" />
-                                    <span>${milestone.amount}</span>
+                                    {/* <DollarSign size={14} className="text-[#9333EA] mr-1" /> */}
+                                    <span>PKR {milestone.amount.toLocaleString()}</span>
                                   </div>
                                   <div className="flex items-center text-sm">
                                     <Calendar size={14} className="text-[#9333EA] mr-1" />
                                     <span>{new Date(milestone.deadline).toLocaleDateString()}</span>
                                   </div>
-                                </div>
-                                {milestone.attachmentSubmitted && (
-                                  <div className="mt-3 flex justify-between items-center">
-                                    <div className="flex items-center text-sm text-green-400">
-                                      <Upload size={14} className="mr-1" />
-                                      <span>Submission ready for review</span>
+                                  <div className="flex items-center text-sm">
+                                    <div className="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded-full text-xs">
+                                      In Progress
                                     </div>
-                                    <button
-                                      onClick={() => handleApproveMilestone(selectedTeam._id, milestone._id)}
-                                      className="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700 transition-colors flex items-center"
-                                    >
-                                      <CheckSquare size={14} className="mr-1" />
-                                      Approve
-                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="mb-6">
+                      <h3 className="text-md font-medium text-gray-300 mb-2">Submitted Milestones</h3>
+                      {selectedMember.milestones.filter((m) => m.status === "submitted").length === 0 ? (
+                        <p className="text-gray-400 text-sm py-2">No submitted milestones</p>
+                      ) : (
+                        <div className="space-y-3">
+                          {selectedMember.milestones
+                            .filter((m) => m.status === "submitted")
+                            .map((milestone) => (
+                              <div key={milestone._id} className="bg-[#2d2d3a] p-3 rounded-lg">
+                                <h4 className="font-medium">{milestone.title}</h4>
+                                <p className="text-sm text-gray-400 mt-1">{milestone.description}</p>
+                                <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
+                                  <div className="flex items-center text-sm">
+                                    {/* <DollarSign size={14} className="text-[#9333EA] mr-1" /> */}
+                                    <span>PKR {milestone.amount.toLocaleString()}</span>
+                                  </div>
+                                  <div className="flex items-center text-sm">
+                                    <Calendar size={14} className="text-[#9333EA] mr-1" />
+                                    <span>{new Date(milestone.deadline).toLocaleDateString()}</span>
+                                  </div>
+                                  <div className="flex items-center text-sm">
+                                    <div className="bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded-full text-xs">
+                                      Submitted
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {milestone.submission && (
+                                  <div className="mt-3 p-3 bg-[#1c1c24] rounded-lg">
+                                    <div className="flex justify-between items-center mb-2">
+                                      <h5 className="text-sm font-medium text-white">Submission Details</h5>
+                                      <span className="text-xs text-gray-400">
+                                        {new Date(milestone.submission.submittedAt).toLocaleString()}
+                                      </span>
+                                    </div>
+
+                                    {milestone.submission.message && (
+                                      <p className="text-sm text-gray-300 mb-2">{milestone.submission.message}</p>
+                                    )}
+
+                                    {milestone.submission.attachments &&
+                                      milestone.submission.attachments.length > 0 && (
+                                        <div className="space-y-2">
+                                          <p className="text-xs text-gray-400">Attachments:</p>
+                                          <div className="flex flex-wrap gap-2">
+                                            {milestone.submission.attachments.map((attachment) => (
+                                              <a
+                                                key={attachment._id}
+                                                href={attachment.url}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="bg-[#2d2d3a] text-[#9333EA] px-3 py-1 rounded-md text-xs hover:bg-[#3d3d4a] transition-colors flex items-center"
+                                              >
+                                                <Download size={12} className="mr-1" />
+                                                View Attachment
+                                              </a>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+
+                                    <div className="mt-3 flex justify-end gap-2">
+                                      <button
+                                        onClick={() =>
+                                          handleRequestRevision(
+                                            selectedTeam._id,
+                                            selectedMember.freelancer._id,
+                                            milestone._id,
+                                          )
+                                        }
+                                        className="bg-yellow-600 text-white px-3 py-1 rounded-md text-sm hover:bg-yellow-700 transition-colors flex items-center"
+                                      >
+                                        <AlertCircle size={14} className="mr-1" />
+                                        Request Revision
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          handleApproveMilestone(
+                                            selectedTeam._id,
+                                            selectedMember.freelancer._id,
+                                            milestone._id,
+                                          )
+                                        }
+                                        className="bg-green-600 text-white px-3 py-1 rounded-md text-sm hover:bg-green-700 transition-colors flex items-center"
+                                      >
+                                        <CheckSquare size={14} className="mr-1" />
+                                        Approve
+                                      </button>
+                                    </div>
                                   </div>
                                 )}
                               </div>
@@ -475,12 +598,12 @@ const ClientTeams = () => {
 
                     <div>
                       <h3 className="text-md font-medium text-gray-300 mb-2">Completed Milestones</h3>
-                      {selectedMember.milestones.filter((m) => m.isCompleted).length === 0 ? (
+                      {selectedMember.milestones.filter((m) => m.status === "approved").length === 0 ? (
                         <p className="text-gray-400 text-sm py-2">No completed milestones</p>
                       ) : (
                         <div className="space-y-3">
                           {selectedMember.milestones
-                            .filter((m) => m.isCompleted)
+                            .filter((m) => m.status === "approved")
                             .map((milestone) => (
                               <div
                                 key={milestone._id}
@@ -490,27 +613,34 @@ const ClientTeams = () => {
                                 <p className="text-sm text-gray-400 mt-1">{milestone.description}</p>
                                 <div className="flex flex-wrap gap-x-4 gap-y-2 mt-2">
                                   <div className="flex items-center text-sm">
-                                    <DollarSign size={14} className="text-[#9333EA] mr-1" />
-                                    <span>${milestone.amount}</span>
+                                    {/* <DollarSign size={14} className="text-[#9333EA] mr-1" /> */}
+                                    <span>PKR {milestone.amount.toLocaleString()}</span>
                                   </div>
                                   <div className="flex items-center text-sm">
                                     <CheckCircle size={14} className="text-green-500 mr-1" />
                                     <span className="text-green-400">Completed</span>
                                   </div>
                                 </div>
-                                {milestone.attachment && (
-                                  <div className="mt-2">
-                                    <a
-                                      href={milestone.attachment}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="text-[#9333EA] text-sm hover:underline flex items-center"
-                                    >
-                                      <Download size={14} className="mr-1" />
-                                      View Deliverable
-                                    </a>
-                                  </div>
-                                )}
+                                {milestone.submission &&
+                                  milestone.submission.attachments &&
+                                  milestone.submission.attachments.length > 0 && (
+                                    <div className="mt-2">
+                                      <div className="flex flex-wrap gap-2">
+                                        {milestone.submission.attachments.map((attachment) => (
+                                          <a
+                                            key={attachment._id}
+                                            href={attachment.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-[#9333EA] text-sm hover:underline flex items-center"
+                                          >
+                                            <Download size={14} className="mr-1" />
+                                            View Deliverable
+                                          </a>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
                               </div>
                             ))}
                         </div>

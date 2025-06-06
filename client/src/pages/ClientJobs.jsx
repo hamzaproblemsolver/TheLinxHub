@@ -99,7 +99,7 @@ const ClientJobs = () => {
         <h3 className="text-lg font-semibold mb-2">{job.title}</h3>
         <p className="text-gray-400 mb-2">{job.description.substring(0, 100)}...</p>
         <div className="flex justify-between items-center">
-          <span className="text-[#9333EA]">${job.budget}</span>
+          <span className="text-[#9333EA]">PKR {job.budget}</span>
           <button
             onClick={() => navigate(`/client/jobs/${job._id}`)}
             className="bg-[#9333EA] hover:bg-[#a855f7] text-white px-4 py-2 rounded-md transition-colors duration-200"
