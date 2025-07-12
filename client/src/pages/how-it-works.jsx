@@ -28,7 +28,7 @@ export default function HowItWorks() {
   const steps = [
     {
       title: "Create Your Account",
-      description: "Sign up in minutes and complete your profile to get started on GoWithFlow.",
+      description: "Sign up in minutes and complete your profile to get started on TheLinxHub.",
       icon: <CheckCircle className="w-6 h-6 text-purple-500" />,
       image: "/images/create-account.svg",
     },
@@ -70,7 +70,7 @@ export default function HowItWorks() {
         <div className="max-w-7xl mx-auto">
           <motion.div className="text-center mb-16" variants={fadeIn}>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              How <span className="text-purple-500">GoWithFlow</span> Works
+              How <span className="text-purple-500">TheLinxHub</span> Works
             </h1>
             <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto">
               Our streamlined process makes it easy to find talent, collaborate on projects, and get quality work done
@@ -151,7 +151,7 @@ export default function HowItWorks() {
               For <span className="text-purple-500">Freelancers</span>
             </h2>
             <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-              Join thousands of skilled professionals already using GoWithFlow to find clients and grow their business.
+              Join thousands of skilled professionals already using TheLinxHub to find clients and grow their business.
             </p>
           </div>
 
@@ -212,7 +212,7 @@ export default function HowItWorks() {
           <div className="grid gap-6">
             {[
               {
-                question: "How do I get started on GoWithFlow?",
+                question: "How do I get started on TheLinxHub?",
                 answer:
                   "Simply sign up for an account, complete your profile, and you can start posting projects or applying for work immediately.",
               },
@@ -227,7 +227,7 @@ export default function HowItWorks() {
                   "You can request revisions from the freelancer. If issues persist, our support team can help mediate and resolve any disputes.",
               },
               {
-                question: "How does GoWithFlow verify freelancers?",
+                question: "How does TheLinxHub verify freelancers?",
                 answer:
                   "All freelancers undergo a verification process that includes skill assessment, portfolio review, and identity verification to ensure quality.",
               },
@@ -258,7 +258,7 @@ export default function HowItWorks() {
         <div className="max-w-5xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Get Started?</h2>
           <p className="text-lg text-gray-300 mb-10 max-w-3xl mx-auto">
-            Join thousands of freelancers and businesses already using GoWithFlow to collaborate on amazing projects.
+            Join thousands of freelancers and businesses already using TheLinxHub to collaborate on amazing projects.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -291,7 +291,7 @@ export default function HowItWorks() {
                   <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
                   <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <span className="text-xl font-bold text-[#9333EA]">GoWithFlow</span>
+                <span className="text-xl font-bold text-[#9333EA]">TheLinxHub</span>
               </div>
               <p className="text-sm text-gray-400">Connecting talent with opportunity worldwide.</p>
             </div>
@@ -324,7 +324,7 @@ export default function HowItWorks() {
             </div>
           </div>
           <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-[#2d2d3a] pt-8 md:flex-row">
-            <p className="text-sm text-gray-400">© {new Date().getFullYear()} GoWithFlow. All rights reserved.</p>
+            <p className="text-sm text-gray-400">© {new Date().getFullYear()} TheLinxHub. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <a href="#" className="text-gray-400 hover:text-white">
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -98,7 +98,7 @@ function AboutUs() {
                 We're Changing How <span className="text-[#9333EA]">Talent Connects</span>
               </h1>
               <p className="text-lg md:text-xl text-gray-400 mb-8">
-                GoWithFlow is a global platform that connects exceptional freelancers with innovative companies, creating meaningful work relationships that drive success.
+                TheLinxHub is a global platform that connects exceptional freelancers with innovative companies, creating meaningful work relationships that drive success.
               </p>
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -139,7 +139,7 @@ function AboutUs() {
                   </div>
                   <h2 className="text-3xl md:text-4xl font-bold">From Idea to Global Platform</h2>
                   <p className="text-gray-400">
-                    Founded in 2018, GoWithFlow began with a simple mission: to create a more efficient way for companies to find and work with top freelance talent. What started as a small team of passionate entrepreneurs has grown into a global platform connecting thousands of businesses with skilled professionals across the world.
+                    Founded in 2018, TheLinxHub began with a simple mission: to create a more efficient way for companies to find and work with top freelance talent. What started as a small team of passionate entrepreneurs has grown into a global platform connecting thousands of businesses with skilled professionals across the world.
                   </p>
                   <p className="text-gray-400">
                     Our journey hasn't always been smooth, but our commitment to quality, transparency, and innovation has never wavered. Today, we're proud to be one of the fastest-growing freelance platforms, with a community that spans over 150 countries.
@@ -159,7 +159,7 @@ function AboutUs() {
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">Principles That Guide Us</h2>
               <p className="text-gray-400">
-                At GoWithFlow, we believe in creating a platform that benefits everyone involved. These core values drive everything we do.
+                At TheLinxHub, we believe in creating a platform that benefits everyone involved. These core values drive everything we do.
               </p>
             </AnimatedSection>
 
@@ -277,7 +277,7 @@ function AboutUs() {
               <div className="inline-block rounded-lg bg-[#9333EA] px-3 py-1 text-sm text-white mb-4">
                 Our Team
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold mb-6">Meet the People Behind GoWithFlow</h2>
+              <h2 className="text-3xl md:text-4xl font-bold mb-6">Meet the People Behind TheLinxHub</h2>
               <p className="text-gray-400">
                 Our diverse team of experts is passionate about creating the best platform for freelancers and businesses alike.
               </p>
@@ -416,20 +416,20 @@ function AboutUs() {
               </div>
               <h2 className="text-3xl md:text-4xl font-bold mb-6">What Our Community Says</h2>
               <p className="text-gray-400">
-                Don't just take our word for it. Here's what freelancers and businesses have to say about GoWithFlow.
+                Don't just take our word for it. Here's what freelancers and businesses have to say about TheLinxHub.
               </p>
             </AnimatedSection>
 
             <StaggeredChildren className="grid md:grid-cols-2 lg:grid-cols-3 gap-8" staggerDelay={0.15}>
               {[
                 {
-                  quote: "GoWithFlow has completely transformed how I find clients. The quality of projects and the ease of use are unmatched.",
+                  quote: "TheLinxHub has completely transformed how I find clients. The quality of projects and the ease of use are unmatched.",
                   author: "Sarah J.",
                   role: "UX Designer",
                   image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
                 },
                 {
-                  quote: "As a business owner, finding reliable freelancers used to be a nightmare. GoWithFlow has made it simple and stress-free.",
+                  quote: "As a business owner, finding reliable freelancers used to be a nightmare. TheLinxHub has made it simple and stress-free.",
                   author: "Michael T.",
                   role: "CEO, TechStart",
                   image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
@@ -441,19 +441,19 @@ function AboutUs() {
                   image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
                 },
                 {
-                  quote: "We've built an entire remote team through GoWithFlow. The talent quality is exceptional and the platform makes management easy.",
+                  quote: "We've built an entire remote team through TheLinxHub. The talent quality is exceptional and the platform makes management easy.",
                   author: "Lisa M.",
                   role: "COO, DigitalNomads",
                   image: "https://images.unsplash.com/photo-1534751516642-a1af1ef26a56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=689&q=80"
                 },
                 {
-                  quote: "The community aspect sets GoWithFlow apart. I've made valuable connections and even found mentors through the platform.",
+                  quote: "The community aspect sets TheLinxHub apart. I've made valuable connections and even found mentors through the platform.",
                   author: "Raj P.",
                   role: "Motion Designer",
                   image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
                 },
                 {
-                  quote: "GoWithFlow's customer support is outstanding. Any issues are resolved quickly and professionally.",
+                  quote: "TheLinxHub's customer support is outstanding. Any issues are resolved quickly and professionally.",
                   author: "Emma L.",
                   role: "Content Strategist",
                   image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80"
@@ -503,7 +503,7 @@ function AboutUs() {
               <div className="text-center mb-8">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Join Our Community?</h2>
                 <p className="text-gray-300 max-w-2xl mx-auto">
-                  Whether you're looking for top talent or exciting projects, GoWithFlow has everything you need to succeed in the freelance economy.
+                  Whether you're looking for top talent or exciting projects, TheLinxHub has everything you need to succeed in the freelance economy.
                 </p>
               </div>
               
@@ -530,7 +530,7 @@ function AboutUs() {
                   <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
                   <path d="M8 12L11 15L16 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
-                <span className="text-xl font-bold text-[#9333EA]">GoWithFlow</span>
+                <span className="text-xl font-bold text-[#9333EA]">TheLinxHub</span>
               </div>
               <p className="text-sm text-gray-400">Connecting talent with opportunity worldwide.</p>
             </div>
@@ -563,7 +563,7 @@ function AboutUs() {
             </div>
           </div>
           <div className="mt-8 flex flex-col items-center justify-between gap-4 border-t border-[#2d2d3a] pt-8 md:flex-row">
-            <p className="text-sm text-gray-400">© {new Date().getFullYear()} GoWithFlow. All rights reserved.</p>
+            <p className="text-sm text-gray-400">© {new Date().getFullYear()} TheLinxHub. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <a href="#" className="text-gray-400 hover:text-white">
                 <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -617,7 +617,7 @@ function FreelancerRegister() {
               strokeLinejoin="round"
             />
           </svg>
-          <span className="text-xl font-bold text-[#9333EA]">GoWithFlow</span>
+          <span className="text-xl font-bold text-[#9333EA]">TheLinxHub</span>
         </div>  
             <motion.div
         className="w-full max-w-2xl bg-gray-900 rounded-xl p-8 shadow-2xl mb-10"

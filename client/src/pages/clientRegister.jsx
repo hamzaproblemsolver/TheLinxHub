@@ -172,7 +172,7 @@ function ClientRegister() {
                         strokeLinejoin="round"
                     />
                 </svg>
-                <span className="text-2xl font-bold text-[#9333EA]">GoWithFlow</span>
+                <span className="text-2xl font-bold text-[#9333EA]">TheLinxHub</span>
             </div>
             <motion.div
                 className="w-full max-w-xl bg-gray-900 rounded-xl p-8 shadow-2xl"

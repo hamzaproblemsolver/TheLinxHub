@@ -198,7 +198,7 @@ const Navbar = () => {
               strokeLinejoin="round"
             />
           </svg>
-          <span className="text-xl font-bold text-[#9333EA]">GoWithFlow</span>
+          <span className="text-xl font-bold text-[#9333EA]">TheLinxHub</span>
         </div>
 
         {/* Desktop Navigation */}

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from "react";
 
 const Footer = () => {
@@ -9,7 +10,7 @@ const Footer = () => {
           <div className="flex items-center justify-center space-x-2">
             <span className="text-3xl text-center font-bold">Go With Flow</span>
           </div>
-          <p className="text-white">Call now: <a href="tel:+919591776078" className="font-medium text-white">+92 313 0471004</a></p>
+          <p className="text-white">Call now: <a href="tel:+923094114786" className="font-medium text-white">+92 309 4114786</a></p>
           <p className="text-white">1.5 KM Defence Rd, off Raiwand Road,<br />Lda Avenue Phase 1, Lda Avenue, Lahore</p>
         </div>
 
@@ -49,7 +50,7 @@ const Footer = () => {
       {/* Footer Bottom */}
       <div className="mt-8 border-t border-purple-300 pt-4">
         <p className="text-sm text-purple-700">
-          © 2022 GoWithFlow - Job Portal. All Rights Reserved.
+          © 2022 TheLinxHub - Job Portal. All Rights Reserved.
         </p>
         
       </div>

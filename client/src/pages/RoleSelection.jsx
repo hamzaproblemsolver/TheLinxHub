@@ -46,7 +46,7 @@ function RoleSelection() {
               strokeLinejoin="round"
             />
           </svg>
-          <span className="text-3xl font-bold text-[#9333EA]">GoWithFlow</span>
+          <span className="text-3xl font-bold text-[#9333EA]">TheLinxHub</span>
         </div>
 
       <motion.div
@@ -69,7 +69,7 @@ function RoleSelection() {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          Select how you want to use GoWithFlow
+          Select how you want to use TheLinxHub
         </motion.p>
 
         <motion.div

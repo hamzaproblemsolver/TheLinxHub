@@ -1,22 +1,20 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 /**
  * Connect to MongoDB database
  * @returns {Promise} MongoDB connection
  */
 const connectDB = async () => {
-  try {
-    const conn = await mongoose.connect(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/freelance-platform',
-      {
-        // These options are no longer needed in Mongoose 6+
-        // useNewUrlParser: true,
-        // useUnifiedTopology: true,
-        // useCreateIndex: true,
-        // useFindAndModify: false,
-      }
+  // Validate environment variable
+  if (!process.env.MONGODB_URI) {
+    console.error(
+      "MongoDB connection URI is not defined. Please set MONGODB_URI in your .env file"
     );
+    process.exit(1);
+  }
 
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
     return conn;
   } catch (error) {

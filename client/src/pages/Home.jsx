@@ -135,7 +135,7 @@ function Home() {
           <div className="container">
             <div className="section-header">
               <span className="section-badge">Features</span>
-              <h2 className="section-title">Why Choose GoWithFlow</h2>
+              <h2 className="section-title">Why Choose TheLinxHub</h2>
               <p className="section-description">
                 Our platform provides everything you need to succeed in the freelance marketplace.
               </p>
@@ -227,7 +227,7 @@ function Home() {
               </span>
               <h2 className="text-3xl font-bold mb-3">Real Results, Real Impact</h2>
               <p className="text-gray-600 max-w-2xl mx-auto">
-                See how GoWithFlow has transformed businesses and freelancer careers worldwide.
+                See how TheLinxHub has transformed businesses and freelancer careers worldwide.
               </p>
             </div>
 
@@ -395,7 +395,7 @@ function Home() {
                   </svg>
                 </div>
                 <p className="text-white leading-relaxed mb-6 flex-grow">
-                  GoWithFlow transformed my business. I found an amazing developer who delivered my project ahead of
+                  TheLinxHub transformed my business. I found an amazing developer who delivered my project ahead of
                   schedule and exceeded all expectations.
                 </p>
                 <div className="flex items-center mt-auto">
@@ -505,7 +505,7 @@ function Home() {
           <div className="container">
             <div className="cta-content">
               <h2 className="cta-title">Ready to Get Started?</h2>
-              <p className="cta-description">Join thousands of freelancers and businesses already using GoWithFlow.</p>
+              <p className="cta-description">Join thousands of freelancers and businesses already using TheLinxHub.</p>
               <div className="cta-buttons">
                 <button className="btn btn-primary">Sign Up as Freelancer</button>
                 <button className="btn btn-outline">Post a Project</button>
@@ -538,7 +538,7 @@ function Home() {
                     strokeLinejoin="round"
                   />
                 </svg>
-                <span className="logo-text">GoWithFlow</span>
+                <span className="logo-text">TheLinxHub</span>
               </div>
               <p className="footer-tagline">Connecting talent with opportunity worldwide.</p>
             </div>
@@ -619,7 +619,7 @@ function Home() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p className="copyright">© {new Date().getFullYear()} GoWithFlow. All rights reserved.</p>
+            <p className="copyright">© {new Date().getFullYear()} TheLinxHub. All rights reserved.</p>
             <div className="social-links">
               <a href="#" className="social-link">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
